@@ -12,7 +12,7 @@ public class GameService {
     private final WordRepository wordRepository;
     private Game game;
 
-    public GameService(WordRepository wordRepository,int life) {
+    public GameService(WordRepository wordRepository, int life) {
         this.wordRepository = wordRepository;
         initGame(life);
     }
@@ -29,13 +29,27 @@ public class GameService {
         return false;
     }
 
+    public String correctLetter(String emptyWord, char guess, int indexOfChar) {
 
-    
-    private void initGame(int life){
+        StringBuilder currentWord = new StringBuilder(emptyWord);
+
+        currentWord.setCharAt(indexOfChar, guess);
+
+        while (indexOfChar >= 0) {
+            indexOfChar = game.getAnswer().indexOf(guess, indexOfChar + 1);
+            if (indexOfChar >= 0) {
+                currentWord.setCharAt(indexOfChar, guess);
+            }
+        }
+
+        return currentWord.toString();
+    }
+
+    private void initGame(int life) {
         game = new Game();
         game.setAnswer(getRandomWord());
         game.setLife(life);
-               
+
     }
 
     private String getRandomWord() {
