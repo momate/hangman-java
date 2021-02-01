@@ -22,11 +22,38 @@ public class ConsoleView implements View {
 
     @Override
     public void start() {
+        prepare();
 
-       
+        while (!game.isWin() && game.getLife() > 0) {
+            emptyWordPrinter(emptyWord);
+            inputValidator();
+
+            if (game.isUsedLetter(guess)) {
+                System.out.println("This letter is already used. Try another");
+            } else {
+                checkGuess();
+            }
+            System.out.println("Guessed letters: " + game.getLettersUsed().toString());
+        }
+
+        finish();
     }
     
-    
+    private void emptyWordPrinter(String emptyWord){
+        String formattedWord = emptyWord.replaceAll(".(?!$)", "$0 ");
+        System.out.println(formattedWord);
+    }
+
+    private void inputValidator() {
+        String input = SC.nextLine();
+        while (input.length() != 1 || input.contains(" ")) {
+            System.out.println("You can only guess letters");
+            input = SC.nextLine();
+        }
+
+        guess = input.charAt(0);
+    }
+
     private void checkGuess() {
         if (!gameService.isCorrectGuess(guess)) {
             noteIncorrectGuess();
@@ -72,7 +99,4 @@ public class ConsoleView implements View {
         }
 
     }
-
-
-
 }
