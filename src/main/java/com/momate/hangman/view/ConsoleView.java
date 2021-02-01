@@ -25,6 +25,53 @@ public class ConsoleView implements View {
 
        
     }
+    
+    
+    private void checkGuess() {
+        if (!gameService.isCorrectGuess(guess)) {
+            noteIncorrectGuess();
+        } else {
+            int indexOfChar = game.getAnswer().indexOf(guess);
+            emptyWord = gameService.correctLetter(emptyWord, guess, indexOfChar);
+            checkIsWin(emptyWord);
+        }
+    }
+
+    private void checkIsWin(String currentWord) {
+        emptyWord = currentWord;
+        if (currentWord.indexOf("_") == -1) {
+            game.setWin(true);
+        }
+    }
+
+    private void prepare() {
+        System.out.println(WELCOME_MSG);
+        emptyWord = game.getAnswer().replaceAll(".", "_");
+
+    }
+
+    private void finish() {
+        if (game.isWin()) {
+            System.out.println("You were correct, the answer is: " + game.getAnswer());
+            System.out.println("WIN");
+        } else {
+            System.out.println("LOSE");
+            System.out.println("The answer is : " + game.getAnswer());
+        }
+
+        SC.close();
+    }
+
+    private void noteIncorrectGuess() {
+        boolean isLast = game.getLife() == 1;
+        if (isLast) {
+            System.out.println("This is your last chance");
+        } else {
+            System.out.printf("Wrong Answer! %d attempt left", game.getLife());
+            System.out.println();
+        }
+
+    }
 
 
 
